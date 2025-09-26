@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Dream Weaver Tales Theme - Magical Bedtime Colors */
+  --color-bg: hsl(280, 40%, 15%);
+  --color-fg: hsl(320, 20%, 95%);
+  --color-accent: hsl(320, 80%, 70%);
+  --color-primary: hsl(260, 90%, 65%);
+  --color-surface: hsl(280, 30%, 20%);
+  --color-text-muted: hsl(320, 15%, 75%);
+}
+
+/* CELO Theme */
+[data-theme="celo"] {
+  --color-bg: hsl(0, 0%, 0%);
+  --color-fg: hsl(0, 0%, 100%);
+  --color-accent: hsl(48, 96%, 68%);
+  --color-primary: hsl(48, 96%, 68%);
+  --color-surface: hsl(0, 0%, 10%);
+  --color-text-muted: hsl(0, 0%, 70%);
+}
+
+/* SOLANA Theme */
+[data-theme="solana"] {
+  --color-bg: hsl(260, 30%, 10%);
+  --color-fg: hsl(0, 0%, 95%);
+  --color-accent: hsl(290, 80%, 70%);
+  --color-primary: hsl(270, 90%, 65%);
+  --color-surface: hsl(260, 25%, 15%);
+  --color-text-muted: hsl(0, 0%, 70%);
+}
+
+/* BASE Theme */
+[data-theme="base"] {
+  --color-bg: hsl(220, 40%, 10%);
+  --color-fg: hsl(0, 0%, 95%);
+  --color-accent: hsl(220, 100%, 50%);
+  --color-primary: hsl(220, 100%, 50%);
+  --color-surface: hsl(220, 35%, 15%);
+  --color-text-muted: hsl(0, 0%, 70%);
+}
+
+/* COINBASE Theme */
+[data-theme="coinbase"] {
+  --color-bg: hsl(220, 50%, 8%);
+  --color-fg: hsl(0, 0%, 95%);
+  --color-accent: hsl(220, 100%, 50%);
+  --color-primary: hsl(220, 100%, 50%);
+  --color-surface: hsl(220, 45%, 12%);
+  --color-text-muted: hsl(0, 0%, 70%);
+}
+
+@layer base {
+  * {
+    @apply border-purple-200;
+  }
+  
+  body {
+    @apply bg-gradient-to-br from-purple-900 via-pink-800 to-indigo-900 text-fg min-h-screen;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white bg-opacity-10 backdrop-blur-md border border-white border-opacity-20 rounded-xl;
+  }
+
+  .magical-gradient {
+    background: linear-gradient(135deg, 
+      hsl(280, 60%, 50%) 0%, 
+      hsl(320, 70%, 60%) 25%, 
+      hsl(260, 80%, 70%) 50%, 
+      hsl(300, 60%, 65%) 75%, 
+      hsl(280, 60%, 50%) 100%);
+  }
+
+  .story-card {
+    @apply glass-card p-6 hover:bg-opacity-15 transition-all duration-300 shadow-card hover:shadow-deep;
+  }
+
+  .btn-primary {
+    @apply bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-xl font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105;
+  }
+
+  .btn-secondary {
+    @apply glass-card text-fg px-6 py-3 rounded-xl font-medium hover:bg-opacity-20 transition-all duration-200;
+  }
+
+  .input-field {
+    @apply glass-card px-4 py-3 rounded-xl text-fg placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent focus:bg-opacity-20 transition-all duration-200;
+  }
+
+  .floating-star {
+    @apply absolute text-yellow-300 animate-twinkle;
+  }
+
+  .moon-glow {
+    @apply absolute rounded-full bg-gradient-to-br from-yellow-200 to-yellow-400 animate-pulse-soft;
+    box-shadow: 0 0 50px rgba(255, 255, 0, 0.3);
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent;
+  }
+}
