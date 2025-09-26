@@ -89,6 +89,19 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      boxShadow: {
+        card: "0 4px 16px hsla(0, 0%, 0%, 0.1)",
+        deep: "0 12px 32px hsla(0, 0%, 0%, 0.2)",
+      },
+      spacing: {
+        lg: "32px",
+        md: "16px",
+        sm: "8px",
+        xs: "4px",
+      },
+      fontSize: {
+        "5xl": ["3rem", { lineHeight: "1" }],
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },

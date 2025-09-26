@@ -54,6 +54,66 @@ export function getAgeGroupDescription(ageGroup: string): string {
   }
 }
 
+export async function generateStoryWithAudio(params: {
+  characterName: string;
+  theme: string;
+  ageGroup: string;
+  moralLesson?: string;
+  customElements?: string;
+  voice?: string;
+}): Promise<{
+  title: string;
+  text: string;
+  audioUrl: string;
+  duration: string;
+}> {
+  try {
+    // Generate story text
+    const storyResponse = await fetch('/api/generate-story', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    });
+
+    if (!storyResponse.ok) {
+      throw new Error('Failed to generate story');
+    }
+
+    const story = await storyResponse.json();
+
+    // Generate audio
+    const audioResponse = await fetch('/api/generate-audio', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        text: story.text,
+        voice: params.voice || 'alloy',
+      }),
+    });
+
+    if (!audioResponse.ok) {
+      throw new Error('Failed to generate audio');
+    }
+
+    const audio = await audioResponse.json();
+
+    return {
+      title: story.title,
+      text: story.text,
+      audioUrl: audio.audioUrl,
+      duration: story.duration,
+    };
+  } catch (error) {
+    console.error('Story generation failed:', error);
+    throw error;
+  }
+}
+
+// Keep the old function for backward compatibility during transition
 export function simulateStoryGeneration(): Promise<{
   title: string;
   text: string;
