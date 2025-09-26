@@ -1,0 +1,30 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "frame": {
+    "version": "1",
+    "name": "Dream Weaver Tales",
+    "subtitle": "Built with Zara",
+    "description": "Dream Weaver Tales is a Base Mini App built with Zara.",
+    "iconUrl": "https://0co.to/images/zara-2.png",
+    "homeUrl": "https://dd489afd93a6460888f6fea3b68ade63-plcd.vercel.app",
+    "splashImageUrl": "https://dd489afd93a6460888f6fea3b68ade63-plcd.vercel.app/splash.png",
+    "splashBackgroundColor": "#000000",
+    "heroImageUrl": "https://dd489afd93a6460888f6fea3b68ade63-plcd.vercel.app/image.png",
+    "tagline": "Dream Weaver Tales",
+    "screenshotUrls": [
+      "https://dd489afd93a6460888f6fea3b68ade63-plcd.vercel.app/screenshot.png",
+      "https://dd489afd93a6460888f6fea3b68ade63-plcd.vercel.app/screenshot.png"
+    ],
+    "primaryCategory": "social",
+    "tags": [
+      "base",
+      "miniapp",
+      "onchainkit"
+    ],
+    "webhookUrl": "https://dd489afd93a6460888f6fea3b68ade63-plcd.vercel.app/api/webhook"
+  }
+}
