@@ -10,14 +10,18 @@ import { SleepTimer } from './components/SleepTimer';
 import { InputSlider } from './components/InputSlider';
 import { StoryCard } from './components/StoryCard';
 import { STORY_THEMES, AGE_GROUPS, VOICES, BACKGROUND_SOUNDS, MORAL_LESSONS } from '../lib/constants';
-import { simulateStoryGeneration } from '../lib/utils';
+import { generateStoryWithAudio } from '../lib/utils';
 import { Story } from '../lib/types';
+import { useAuth } from './components/AuthProvider';
+import { createStory, canGenerateStory, incrementStoryUsage, getUserStories } from '../lib/database';
 
 export default function HomePage() {
+  const { user } = useAuth();
+
   // Story generation state
   const [isGenerating, setIsGenerating] = useState(false);
   const [currentStory, setCurrentStory] = useState<Story | null>(null);
-  
+
   // Customization state
   const [characterName, setCharacterName] = useState('');
   const [selectedTheme, setSelectedTheme] = useState('animals');
@@ -25,20 +29,38 @@ export default function HomePage() {
   const [selectedVoice, setSelectedVoice] = useState('sarah');
   const [selectedMoralLesson, setSelectedMoralLesson] = useState('');
   const [customElements, setCustomElements] = useState('');
-  
+
   // Sleep timer state
   const [sleepTimerEnabled, setSleepTimerEnabled] = useState(false);
   const [sleepTimerDuration, setSleepTimerDuration] = useState(15);
-  
+
   // Background music state
   const [backgroundMusic, setBackgroundMusic] = useState('none');
-  
+
   // UI state
   const [showCustomization, setShowCustomization] = useState(false);
   const [recentStories, setRecentStories] = useState<Story[]>([]);
 
   // Floating elements animation
   const [stars, setStars] = useState<Array<{ id: number; x: number; y: number; delay: number }>>([]);
+
+  // Load recent stories on mount and user change
+  useEffect(() => {
+    if (user) {
+      loadRecentStories();
+    }
+  }, [user]);
+
+  const loadRecentStories = async () => {
+    if (!user) return;
+
+    try {
+      const userStories = await getUserStories(user.userId, 4);
+      setRecentStories(userStories);
+    } catch (error) {
+      console.error('Failed to load recent stories:', error);
+    }
+  };
 
   useEffect(() => {
     // Generate random floating stars
@@ -57,14 +79,33 @@ export default function HomePage() {
       return;
     }
 
+    if (!user) {
+      alert('Please connect your wallet to generate stories!');
+      return;
+    }
+
+    // Check subscription limits
+    const canGenerate = await canGenerateStory(user.userId);
+    if (!canGenerate) {
+      alert('You have reached your monthly story limit. Upgrade to continue generating stories!');
+      return;
+    }
+
     setIsGenerating(true);
-    
+
     try {
-      const result = await simulateStoryGeneration();
-      
+      const result = await generateStoryWithAudio({
+        characterName,
+        theme: selectedTheme,
+        ageGroup: selectedAgeGroup,
+        moralLesson: selectedMoralLesson || undefined,
+        customElements: customElements || undefined,
+        voice: selectedVoice,
+      });
+
       const newStory: Story = {
         storyId: Date.now().toString(),
-        userId: 'demo-user',
+        userId: user.userId,
         title: result.title,
         prompt: `${characterName} in a ${selectedTheme} adventure`,
         generatedText: result.text,
@@ -75,9 +116,16 @@ export default function HomePage() {
         ageGroup: selectedAgeGroup,
         theme: selectedTheme,
       };
-      
+
+      // Save to database
+      await createStory(newStory);
+      await incrementStoryUsage(user.userId);
+
+      // Load recent stories
+      const userStories = await getUserStories(user.userId, 4);
+      setRecentStories(userStories);
+
       setCurrentStory(newStory);
-      setRecentStories(prev => [newStory, ...prev.slice(0, 4)]);
     } catch (error) {
       console.error('Story generation failed:', error);
       alert('Sorry, story generation failed. Please try again!');
@@ -157,7 +205,7 @@ export default function HomePage() {
           <div className="space-y-4">
             {/* Child's Name */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-fg">Child's Name</label>
+              <label className="text-sm font-medium text-foreground">Child's Name</label>
               <input
                 type="text"
                 value={characterName}
@@ -169,7 +217,7 @@ export default function HomePage() {
 
             {/* Story Theme */}
             <div className="space-y-3">
-              <label className="text-sm font-medium text-fg">Story Theme</label>
+              <label className="text-sm font-medium text-foreground">Story Theme</label>
               <div className="grid grid-cols-2 gap-2">
                 {STORY_THEMES.slice(0, 6).map((theme) => (
                   <button
@@ -185,7 +233,7 @@ export default function HomePage() {
                   >
                     <div className="flex items-center gap-2">
                       <span className="text-lg">{theme.emoji}</span>
-                      <span className="text-sm font-medium text-fg">{theme.name}</span>
+                      <span className="text-sm font-medium text-foreground">{theme.name}</span>
                     </div>
                   </button>
                 ))}
@@ -194,7 +242,7 @@ export default function HomePage() {
 
             {/* Age Group */}
             <div className="space-y-3">
-              <label className="text-sm font-medium text-fg">Age Group</label>
+              <label className="text-sm font-medium text-foreground">Age Group</label>
               <div className="space-y-2">
                 {AGE_GROUPS.map((age) => (
                   <button
@@ -208,8 +256,8 @@ export default function HomePage() {
                       }
                     `}
                   >
-                    <div className="font-medium text-fg">{age.name}</div>
-                    <div className="text-sm text-text-muted">{age.description}</div>
+                    <div className="font-medium text-foreground">{age.name}</div>
+                    <div className="text-sm text-muted-foreground">{age.description}</div>
                   </button>
                 ))}
               </div>
@@ -237,7 +285,7 @@ export default function HomePage() {
 
                 {/* Moral Lesson */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-fg">Moral Lesson (Optional)</label>
+                  <label className="text-sm font-medium text-foreground">Moral Lesson (Optional)</label>
                   <select
                     value={selectedMoralLesson}
                     onChange={(e) => setSelectedMoralLesson(e.target.value)}
@@ -252,7 +300,7 @@ export default function HomePage() {
 
                 {/* Custom Elements */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-fg">Custom Story Elements</label>
+                  <label className="text-sm font-medium text-foreground">Custom Story Elements</label>
                   <textarea
                     value={customElements}
                     onChange={(e) => setCustomElements(e.target.value)}

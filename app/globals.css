@@ -3,13 +3,32 @@
 @tailwind utilities;
 
 :root {
-  /* Dream Weaver Tales Theme - Magical Bedtime Colors */
-  --color-bg: hsl(280, 40%, 15%);
-  --color-fg: hsl(320, 20%, 95%);
-  --color-accent: hsl(320, 80%, 70%);
-  --color-primary: hsl(260, 90%, 65%);
-  --color-surface: hsl(280, 30%, 20%);
-  --color-text-muted: hsl(320, 15%, 75%);
+  /* Dream Weaver Tales Theme - PRD Design System */
+  --background: hsl(200, 20%, 10%);
+  --foreground: hsl(0, 0%, 90%);
+  --card: hsl(200, 20%, 15%);
+  --card-foreground: hsl(0, 0%, 90%);
+  --popover: hsl(200, 20%, 15%);
+  --popover-foreground: hsl(0, 0%, 90%);
+  --primary: hsl(210, 95%, 50%);
+  --primary-foreground: hsl(0, 0%, 90%);
+  --secondary: hsl(200, 20%, 15%);
+  --secondary-foreground: hsl(0, 0%, 90%);
+  --muted: hsl(200, 20%, 15%);
+  --muted-foreground: hsl(0, 0%, 70%);
+  --accent: hsl(350, 90%, 60%);
+  --accent-foreground: hsl(0, 0%, 90%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(0, 0%, 90%);
+  --border: hsl(200, 20%, 20%);
+  --input: hsl(200, 20%, 20%);
+  --ring: hsl(350, 90%, 60%);
+  --chart-1: hsl(210, 95%, 50%);
+  --chart-2: hsl(350, 90%, 60%);
+  --chart-3: hsl(200, 20%, 15%);
+  --chart-4: hsl(0, 0%, 70%);
+  --chart-5: hsl(200, 20%, 10%);
+  --radius: 16px;
 }
 
 /* CELO Theme */
@@ -54,11 +73,11 @@
 
 @layer base {
   * {
-    @apply border-purple-200;
+    @apply border-border;
   }
-  
+
   body {
-    @apply bg-gradient-to-br from-purple-900 via-pink-800 to-indigo-900 text-fg min-h-screen;
+    @apply bg-background text-foreground min-h-screen;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
@@ -69,46 +88,64 @@
 
 @layer components {
   .glass-card {
-    @apply bg-white bg-opacity-10 backdrop-blur-md border border-white border-opacity-20 rounded-xl;
+    @apply bg-card/80 backdrop-blur-md border border-border rounded-lg;
   }
 
   .magical-gradient {
-    background: linear-gradient(135deg, 
-      hsl(280, 60%, 50%) 0%, 
-      hsl(320, 70%, 60%) 25%, 
-      hsl(260, 80%, 70%) 50%, 
-      hsl(300, 60%, 65%) 75%, 
-      hsl(280, 60%, 50%) 100%);
+    background: linear-gradient(135deg,
+      hsl(210, 95%, 50%) 0%,
+      hsl(350, 90%, 60%) 25%,
+      hsl(200, 20%, 15%) 50%,
+      hsl(0, 0%, 70%) 75%,
+      hsl(210, 95%, 50%) 100%);
   }
 
   .story-card {
-    @apply glass-card p-6 hover:bg-opacity-15 transition-all duration-300 shadow-card hover:shadow-deep;
+    @apply glass-card p-6 hover:bg-card/90 transition-all duration-300;
   }
 
   .btn-primary {
-    @apply bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-xl font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105;
+    @apply bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105;
   }
 
   .btn-secondary {
-    @apply glass-card text-fg px-6 py-3 rounded-xl font-medium hover:bg-opacity-20 transition-all duration-200;
+    @apply glass-card text-foreground px-6 py-3 rounded-lg font-medium hover:bg-card/90 transition-all duration-200;
   }
 
   .input-field {
-    @apply glass-card px-4 py-3 rounded-xl text-fg placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-accent focus:bg-opacity-20 transition-all duration-200;
+    @apply glass-card px-4 py-3 rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:bg-card/90 transition-all duration-200;
   }
 
   .floating-star {
-    @apply absolute text-yellow-300 animate-twinkle;
+    @apply absolute text-accent animate-twinkle;
   }
 
   .moon-glow {
-    @apply absolute rounded-full bg-gradient-to-br from-yellow-200 to-yellow-400 animate-pulse-soft;
-    box-shadow: 0 0 50px rgba(255, 255, 0, 0.3);
+    @apply absolute rounded-full bg-gradient-to-br from-accent to-accent/80 animate-pulse-soft;
+    box-shadow: 0 0 50px hsl(350, 90%, 60%, 0.3);
   }
 }
 
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
   }
+
+  .animate-twinkle {
+    animation: twinkle 3s ease-in-out infinite;
+  }
+
+  .animate-pulse-soft {
+    animation: pulse-soft 4s ease-in-out infinite;
+  }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
 }

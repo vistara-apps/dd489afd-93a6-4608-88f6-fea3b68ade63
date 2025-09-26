@@ -36,8 +36,8 @@ export function ParentalGate({ onUnlock, variant = 'default' }: ParentalGateProp
           <div className="flex items-center justify-center mb-3">
             <Shield className="w-8 h-8 text-accent" />
           </div>
-          <h2 className="text-xl font-bold text-fg mb-2">Parental Controls</h2>
-          <p className="text-text-muted text-sm">
+          <h2 className="text-xl font-bold text-foreground mb-2">Parental Controls</h2>
+          <p className="text-muted-foreground text-sm">
             Please solve this simple math problem to continue
           </p>
         </div>
@@ -73,7 +73,7 @@ export function ParentalGate({ onUnlock, variant = 'default' }: ParentalGateProp
           </button>
         </form>
 
-        <div className="text-xs text-text-muted text-center">
+        <div className="text-xs text-muted-foreground text-center">
           This helps ensure only parents can access these settings
         </div>
       </div>
